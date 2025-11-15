@@ -53,16 +53,67 @@ class SparseMatrixCOO:
     
     def transpose_matrix(self):
         return self.col_vec, self.row_vec
-    '''
-    def matrix_sum(self, data_vecB, row_vecB, col_vecB):
-        len_b = len(data_vecB)
-        data_vecC, row_vecC, col_vecC = [0]*(self.data_len + len_b), [0]*(self.data_len + len_b), [0]*(self.data_len + len_b)
-        for i in range(len_b):
-            index = self.get_element(row_vecB[i], col_vecB[i])
-    '''     
+
+    def __add__(self, other):
+        result = SparseMatrixCOO()
+        i, j = 0, 0
+        while i < len(self.data_vec) and j < len(other.data_vec):
+            a_pos = (self.row_vec[i], self.col_vec[i])
+            b_pos = (other.row_vec[j], other.col_vec[j])
+            if a_pos == b_pos:
+                value = self.data_vec[i] + other.data_vec[j]
+                if value != 0:
+                    result.row_vec.append(a_pos[0])
+                    result.col_vec.append(a_pos[1])
+                    result.data_vec.append(value)
+                i += 1
+                j += 1
+            elif a_pos < b_pos:
+                result.row_vec.append(self.row_vec[i])
+                result.col_vec.append(self.col_vec[i])
+                result.data_vec.append(self.data_vec[i])
+                i += 1
+            else:
+                result.row_vec.append(other.row_vec[j])
+                result.col_vec.append(other.col_vec[j])
+                result.data_vec.append(other.data_vec[j])
+                j += 1
+        # Copie o que sobrou em cada matriz
+        while i < len(self.data_vec):
+            result.row_vec.append(self.row_vec[i])
+            result.col_vec.append(self.col_vec[i])
+            result.data_vec.append(self.data_vec[i])
+            i += 1
+        while j < len(other.data_vec):
+            result.row_vec.append(other.row_vec[j])
+            result.col_vec.append(other.col_vec[j])
+            result.data_vec.append(other.data_vec[j])
+            j += 1
+        result.rows_len = self.rows_len
+        result.cols_len = self.cols_len
+        return result
+    
+    def show_matrix(self):
+        print(f"Dimensões: ({self.rows_len}, {self.cols_len}) | Elementos não-zero: {self.data_len}")
+        print("Dados:", self.data_vec)
+        print("Linhas:", self.row_vec)
+        print("Colunas:", self.col_vec)
+        print("-" * 30)
 
 
-A = create_sparse_matrix_traditional(5, 0.2)
 
-print(A)
-print(transform_to_csr(A))
+trad_A = create_sparse_matrix_traditional(4, 0.2)
+print("A = \n", trad_A)
+trad_B = create_sparse_matrix_traditional(4, 0.2)
+print("B = \n", trad_B)
+
+A = SparseMatrixCOO()
+A.transform_sparse_matrix(trad_A)
+A.show_matrix()
+
+B = SparseMatrixCOO()
+B.transform_sparse_matrix(trad_B)
+B.show_matrix()
+
+C = A + B
+C.show_matrix()
