@@ -36,7 +36,8 @@ class SparseMatrixCOO:
                 right = mid
         return left
     
-    def add_element(self, element_data, element_col, element_row):
+    def __setitem__(self, key, element_data):
+        element_row, element_col = key
         i = self.find_index(element_row, element_col)
         if i < self.data_len and self.row_vec[i] == element_row and self.col_vec[i] == element_col:
             self.data_vec[i] = element_data
@@ -46,8 +47,7 @@ class SparseMatrixCOO:
             self.col_vec.insert(i, element_col)
     
     def __getitem__(self, key):
-        element_row = key[0]
-        element_col = key[1]
+        element_row, element_col = key
         i = self.find_index(element_row, element_col)
         if i < self.data_len and self.row_vec[i] == element_row and self.col_vec[i] == element_col:
             return self.data_vec[i]
@@ -107,10 +107,12 @@ class SparseMatrixCOO:
 trad_A = create_sparse_matrix_traditional(4, 0.2)
 print("A = \n", trad_A)
 trad_B = create_sparse_matrix_traditional(4, 0.2)
-print("B = \n", trad_B)
+#print("B = \n", trad_B)
 
 A = SparseMatrixCOO()
 A.transform_sparse_matrix(trad_A)
 A.show_matrix()
 
+A[1, 1] = 0.25
+A.show_matrix()
 print(A[1, 1])
