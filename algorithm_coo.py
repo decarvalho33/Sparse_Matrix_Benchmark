@@ -102,6 +102,35 @@ class SparseMatrixCOO:
         result.cols_len = self.cols_len
         return result
     
+    def __rmul__(self, other):
+        if isinstance(other, SparseMatrixCOO):
+            return self.multiply_matrices(self, other)
+        else:
+            return self.multiply_by_scalar(other)
+
+    def __mul__(self, other):
+        if isinstance(other, SparseMatrixCOO):
+            return self.multiply_matrices(self, other)
+        else:
+            return self.multiply_by_scalar(other)
+    
+    def multiply_matrices(self, other):
+        pass
+
+    def multiply_by_scalar(self, number):
+        result = SparseMatrixCOO()
+        result.col_vec = self.col_vec[:]
+        result.row_vec = self.row_vec[:]
+        result.data_vec = self.data_vec[:]
+        result.data_len = self.data_len
+        result.cols_len = self.cols_len
+        result.rows_len = self.rows_len
+
+        for i in range(result.data_len):
+            result.data_vec[i] *= number
+
+        return result
+
     def show_matrix(self):
         print(f"Dimensões: ({self.rows_len}, {self.cols_len}) | Elementos não-zero: {self.data_len}")
         print("Dados:", self.data_vec)
@@ -114,12 +143,26 @@ class SparseMatrixCOO:
 trad_A = create_sparse_matrix_traditional(4, 0.2)
 print("A = \n", trad_A)
 trad_B = create_sparse_matrix_traditional(4, 0.2)
-#print("B = \n", trad_B)
+print("B = \n", trad_B)
 
 A = SparseMatrixCOO()
 A.transform_sparse_matrix(trad_A)
 A.show_matrix()
 
-A[1, 1] = 0.25
-A.show_matrix()
-print(A[1, 1])
+B = SparseMatrixCOO()
+B.transform_sparse_matrix(trad_B)
+B.show_matrix()
+
+#A[1, 1] = 0.25
+#A.show_matrix()
+#print(A[1, 1])
+
+
+D = 100 * A
+
+D.show_matrix()
+
+
+C = A * 10
+
+C.show_matrix()
