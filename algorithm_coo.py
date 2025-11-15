@@ -54,7 +54,14 @@ class SparseMatrixCOO:
         return 0
     
     def transpose_matrix(self):
-        return self.col_vec, self.row_vec
+        transpose = SparseMatrixCOO()
+        transpose.col_vec = self.row_vec[:]
+        transpose.row_vec = self.col_vec[:]
+        transpose.data_vec = self.data_vec[:]
+        transpose.data_len = self.data_len
+        transpose.cols_len = self.rows_len
+        transpose.rows_len = self.cols_len
+        return transpose
 
     def __add__(self, other):
         result = SparseMatrixCOO()
