@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import timeit
 import csv
 
-OP = "Inserção"
+OP = "Acesso"
 
 dados = []
 
@@ -37,11 +37,11 @@ B_avl[50, 50] = 1
         """
 
         benchmark_avl = """
-A_avl[50, 50] = 1
+A[50, 50]
         """
 
         benchmark_trad = """
-trad_A[50][50] = 1
+trad_A[50][50]
         """
 
         execution_time_hash = timeit.repeat(stmt=benchmark_hash, setup=setup_code, number=10000, repeat=1)
