@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import timeit
 import csv
 
-OP = "Inserção"
+OP = "Transposta"
 
 dados = []
 
-for i in range(2, 3):
+for i in range(2, 7):
     if i >= 4:
         sparcities = [1/10**(i+2), 1/10**(i+1), 1/10**i]
     else:
@@ -22,8 +22,8 @@ from create_sparse_matrix_traditional import create_sparse_matrix_traditional
 from algorithm_1_hash import Sparse_matrix_hash
 from algorithm_2_AVL import Sparse_matrix_AVL
 
-trad_A = create_sparse_matrix_traditional({i}, 0.01)
-trad_B = create_sparse_matrix_traditional({i}, 0.01)
+trad_A = create_sparse_matrix_traditional({i}, {sparcity})
+trad_B = create_sparse_matrix_traditional({i}, {sparcity})
 
 A_avl = Sparse_matrix_AVL(trad_A)
 B_avl = Sparse_matrix_AVL(trad_B)
@@ -37,11 +37,16 @@ A_hash.transpose()
         """
 
         benchmark_avl = """
-A_avl[50, 50] = 1
+A_avl.transpose()
         """
 
         benchmark_trad = """
-trad_A[50][50] = 1
+trad_C = []
+for c in range(cols):
+    trad_C.append(([0.0] * rows))
+for i in range(rows):
+    for j in range(cols):
+        trad_C[j][i] = trad_A[i][j]
         """
 
         execution_time_hash = timeit.repeat(stmt=benchmark_hash, setup=setup_code, number=10000, repeat=1)
