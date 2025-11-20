@@ -19,21 +19,7 @@ class Sparse_matrix_AVL:
             root.value = value
             return root
 
-        root.height = max(AVL.get_height(root.left), AVL.get_height(root.right)) + 1
-
-        balance = AVL.get_balance(root)
-        if balance > 1 and key < root.left.key:
-            return AVL.right_rotate(root)
-        if balance < -1 and key > root.right.key:
-            return AVL.left_rotate(root)
-        if balance > 1 and key > root.left.key:
-            root.left = AVL.left_rotate(root.left)
-            return AVL.right_rotate(root)
-        if balance < -1 and key < root.right.key:
-            root.right = AVL.right_rotate(root.right)
-            return AVL.left_rotate(root)
-
-        return root
+        return AVL.balance(root, key)
 
     def __search_item(self, root, key):
         if not root:
@@ -53,7 +39,40 @@ class Sparse_matrix_AVL:
     def __setitem__(self, key, value):
         if self.transposed:
             key = (key[1], key[0])
-        self.root = self.__insert(self.root, (key[0], key[1]), value)
+        if value == 0:
+            self.root = self.__delete(self.root, (key[0], key[1]))
+        else:
+            self.root = self.__insert(self.root, (key[0], key[1]), value)
+
+
+    def __delete(self, root, key):
+        if not root:
+            return root
+        if key < root.key:
+            root.left = self.__delete(root.left, key)
+        elif key > root.key:
+            root.right = self.__delete(root.right, key)
+        else:
+            # Caso: um ou nenhum filho
+            if not root.left:
+                temp = root.right
+                root = None
+                return temp
+            elif not root.right:
+                temp = root.left
+                root = None
+                return temp
+            # Caso: dois filhos
+            temp = AVL.min_value_node(root.right)
+            root.key = temp.key
+            root.value = temp.value
+            root.right = self.__delete(root.right, temp.key)
+        if not root:
+            return root
+        
+        AVL.balance(root)    
+        return root
+    
 
     def transpose(self):
         self.transposed = not self.transposed

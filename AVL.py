@@ -44,6 +44,30 @@ def left_rotate(x):
 
     return y
 
+def balance(root):
+    root.height = max(get_height(root.left), get_height(root.right)) + 1
+
+    balance = get_balance(root)
+    if balance > 1:
+        if get_balance(root.left) >= 0:
+            return right_rotate(root)
+        else:
+            root.left = left_rotate(root.left)
+            return right_rotate(root)
+    if balance < -1:
+        if get_balance(root.right) <= 0:
+            return left_rotate(root)
+        else:
+            root.right = right_rotate(root.right)
+            return left_rotate(root)
+    return root
+
+def min_value_node(node):
+    current = node
+    while current.left:
+        current = current.left
+    return current
+
 def in_order_elements(root):
         if not root:
             return []
