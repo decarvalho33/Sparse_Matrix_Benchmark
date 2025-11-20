@@ -23,8 +23,8 @@ from algorithm_1_hash.py import Sparse_matrix_hash
 from algorithm_2_AVL import Sparse_matrix_AVL
 
 rows = cols = pow(10, i)
-trad_A = create_sparse_matrix_traditional({i}, 0.01)
-trad_B = create_sparse_matrix_traditional({i}, 0.01)
+trad_A = create_sparse_matrix_traditional({i}, {sparcity})
+trad_B = create_sparse_matrix_traditional({i}, {sparcity})
 
 A_avl = Sparse_matrix_AVL(trad_A)
 B_avl = Sparse_matrix_AVL(trad_B)
