@@ -2,11 +2,11 @@ import matplotlib.pyplot as plt
 import timeit
 import csv
 
-OP = "Inserção"
+OP = "Soma"
 
 dados = []
 
-for i in range(2, 6):
+for i in range(2, 7):
     if i >= 4:
         sparcities = [1/10**(i+2), 1/10**(i+1), 1/10**i]
     else:
