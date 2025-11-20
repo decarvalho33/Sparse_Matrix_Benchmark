@@ -1,10 +1,12 @@
 class Sparse_matrix_hash:
 
-    def __init__(self, n_rows, n_cols, capacity=24, matrix_traditional= None):
+    def __init__(self, matrix_traditional= None):
+        n_rows = len(matrix_traditional)
+        n_cols = len(matrix_traditional[0])
         self.n_rows = n_rows
         self.n_cols = n_cols
         self.base_n_cols = n_cols
-        self.capacity = capacity
+        self.capacity = 24
         self.size = 0
         self.is_transposed = 0
         self.buckets = [[] for _ in range(self.capacity)]
