@@ -1,5 +1,4 @@
 import AVL
-from create_sparse_matrix_traditional import create_sparse_matrix_traditional
 
 class Sparse_matrix_AVL:
     def __init__(self, A=None):
@@ -19,7 +18,7 @@ class Sparse_matrix_AVL:
             root.value = value
             return root
 
-        return AVL.balance(root, key)
+        return AVL.balance(root)
 
     def __search_item(self, root, key):
         if not root:
