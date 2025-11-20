@@ -1,5 +1,3 @@
-from create_sparse_matrix_traditional import create_sparse_matrix_traditional
-
 class Sparse_matrix_hash:
 
     def __init__(self, n_rows, n_cols, capacity=24, matrix_traditional= None):

@@ -19,7 +19,7 @@ for i in range(2, 6):
     for sparcity in sparcities:
         setup_code = f"""
 from create_sparse_matrix_traditional import create_sparse_matrix_traditional
-#from algorithm_1_hash.py import Sparse_matrix_hash
+from algorithm_1_hash.py import Sparse_matrix_hash
 from algorithm_2_AVL import Sparse_matrix_AVL
 
 trad_A = create_sparse_matrix_traditional({i}, 0.01)
@@ -28,8 +28,8 @@ trad_B = create_sparse_matrix_traditional({i}, 0.01)
 A_avl = Sparse_matrix_AVL(trad_A)
 B_avl = Sparse_matrix_AVL(trad_B)
 
-#A_hash = Sparse_matrix_hash(trad_A)
-#B_hash = Sparse_matrix_hash(trad_A)
+A_hash = Sparse_matrix_hash(trad_A)
+B_hash = Sparse_matrix_hash(trad_A)
         """
 
         benchmark_hash = """
@@ -53,7 +53,7 @@ trad_A[50, 50] = 1
         execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=10000, repeat=1)
         trad_times.append(execution_time_trad[0])
 
-        dados.append([i, sparcity, execution_time_hash[0]], execution_time_avl[0], execution_time_trad[0])
+        dados.append([OP, i, sparcity, execution_time_hash[0]], execution_time_avl[0], execution_time_trad[0])
 
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times, marker='o', label='Hash')
@@ -70,5 +70,5 @@ trad_A[50, 50] = 1
 
 with open(f'Tempos_{OP}.csv', mode='w', newline='') as arquivo_csv:
     writer = csv.writer(arquivo_csv)
-    writer.writerow(['i', 'sparsity', 'hash_time', 'avl_time', 'trad_time'])
+    writer.writerow(['Operation', 'i', 'sparsity', 'hash_time', 'avl_time', 'trad_time'])
     writer.writerows(dados)
