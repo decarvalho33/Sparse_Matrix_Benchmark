@@ -1,7 +1,7 @@
 import numpy as np
 
 def create_sparse_matrix_traditional(i, sparsity):
-    rows = cols = i#pow(10, i)
+    rows = cols = pow(10, i)
 
     sparce_matrix = np.zeros((rows, cols), dtype=np.float32)
     total = rows * cols
