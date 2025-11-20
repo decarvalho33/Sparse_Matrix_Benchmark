@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import timeit
 import csv
 
-OP = "Inserção"
+OP = "Escalar"
 
 dados = []
 
