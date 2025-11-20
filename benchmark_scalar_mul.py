@@ -6,7 +6,7 @@ OP = "Inserção"
 
 dados = []
 
-for i in range(2, 3):
+for i in range(2, 7):
     if i >= 4:
         sparcities = [1/10**(i+2), 1/10**(i+1), 1/10**i]
     else:
@@ -22,14 +22,16 @@ from create_sparse_matrix_traditional import create_sparse_matrix_traditional
 from algorithm_1_hash import Sparse_matrix_hash
 from algorithm_2_AVL import Sparse_matrix_AVL
 
-trad_A = create_sparse_matrix_traditional({i}, 0.01)
-trad_B = create_sparse_matrix_traditional({i}, 0.01)
+trad_A = create_sparse_matrix_traditional({i}, {sparcity})
+trad_B = create_sparse_matrix_traditional({i}, {sparcity})
 
 A_avl = Sparse_matrix_AVL(trad_A)
 B_avl = Sparse_matrix_AVL(trad_B)
 
 A_hash = Sparse_matrix_hash(trad_A)
 B_hash = Sparse_matrix_hash(trad_B)
+
+rows = cols = len(trad_A)
         """
 
         benchmark_hash = """
@@ -37,11 +39,14 @@ A_hash.times_scalar(5)
         """
 
         benchmark_avl = """
-A_avl[50, 50] = 1
+A_avl * 5
         """
 
         benchmark_trad = """
-trad_A[50][50] = 1
+scalar = 5
+for i in rows:
+    for j in cols:
+        trad_A[i][j] *= scalar
         """
 
         execution_time_hash = timeit.repeat(stmt=benchmark_hash, setup=setup_code, number=10000, repeat=1)
