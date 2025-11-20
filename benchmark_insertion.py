@@ -19,7 +19,7 @@ for i in range(2, 3):
     for sparcity in sparcities:
         setup_code = f"""
 from create_sparse_matrix_traditional import create_sparse_matrix_traditional
-#from algorithm_1_hash.py import Sparse_matrix_hash
+from algorithm_1_hash import Sparse_matrix_hash
 from algorithm_2_AVL import Sparse_matrix_AVL
 
 trad_A = create_sparse_matrix_traditional({i}, 0.01)
@@ -28,12 +28,12 @@ trad_B = create_sparse_matrix_traditional({i}, 0.01)
 A_avl = Sparse_matrix_AVL(trad_A)
 B_avl = Sparse_matrix_AVL(trad_B)
 
-#A_hash = Sparse_matrix_hash(trad_A)
-#B_hash = Sparse_matrix_hash(trad_A)
+A_hash = Sparse_matrix_hash(trad_A)
+B_hash = Sparse_matrix_hash(trad_B)
         """
 
         benchmark_hash = """
-B_avl[50, 50] = 1
+A_hash.insert(50, 50, 1)
         """
 
         benchmark_avl = """
@@ -58,7 +58,7 @@ trad_A[50][50] = 1
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times, marker='o', label='Hash')
     plt.plot(sparcities, avl_times, marker='s', label='AVL')
-    plt.plot(sparcities, avl_times, marker='.', label='Trad')
+    plt.plot(sparcities, trad_times, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Inserção (i={i})")
