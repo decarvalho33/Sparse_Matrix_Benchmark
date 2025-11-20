@@ -66,7 +66,7 @@ for i in range(rows):
     plt.plot(sparcities, avl_times, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
-    plt.title(f"Execução de Inserção (i={i})")
+    plt.title(f"Execução de {OP} (i={i})")
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
