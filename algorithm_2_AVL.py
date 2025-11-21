@@ -119,7 +119,6 @@ class Sparse_matrix_AVL:
 
         for (i, j), value in AVL.in_order_elements(other.root):
             current = C_tree[i, j]
-            print("debug:", type(current), current, value)
             C_tree[i, j] = current + value
 
         return C_tree
