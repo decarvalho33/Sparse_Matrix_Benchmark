@@ -1,7 +1,7 @@
 class Sparse_matrix_hash:
 
-    def __init__(self, capacity=24, matrix_traditional= None):
-        self.capacity = 24
+    def __init__(self, capacity=100, matrix_traditional= None):
+        self.capacity = capacity
         self.size = 0
         self.is_transposed = 0
         self.buckets = [[] for _ in range(self.capacity)]
@@ -107,7 +107,8 @@ class Sparse_matrix_hash:
         return self.buckets
 
     def hash(self, i, j):
-        return (i*self.base_n_cols+j) % self.capacity
+        h = i * 73856093 ^ j * 19349663
+        return h % self.capacity
 
     def find_entry(self, ib, jb):
         bucket_index = self.hash(ib, jb)
