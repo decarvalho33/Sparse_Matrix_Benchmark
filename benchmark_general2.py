@@ -36,19 +36,31 @@ for i in range(5, 7):
     
     for sparcity in sparcities:
 
+        from create_sparse_matrix_traditional import create_sparse_matrix_traditional
+        from algorithm_1_hash import Sparse_matrix_hash, create_sparse_matrix_hash
+        from algorithm_2_AVL import Sparse_matrix_AVL, create_sparse_matrix_AVL
+        
+        if i < 4:
+            trad_A = create_sparse_matrix_traditional(i, sparcity)
+            trad_B = create_sparse_matrix_traditional(i, sparcity),
+            A_avl = Sparse_matrix_AVL(trad_A)
+            B_avl = Sparse_matrix_AVL(trad_B)
+            A_hash = Sparse_matrix_hash(trad_A)
+            B_hash = Sparse_matrix_hash(trad_B)
+        else:
+            A_avl = create_sparse_matrix_AVL(i, sparcity)
+            B_avl = create_sparse_matrix_AVL(i, sparcity)
+            A_hash = create_sparse_matrix_hash(i, sparcity)
+            B_hash = create_sparse_matrix_hash(i, sparcity)
+            trad_A = [[1]]
+            trad_B = [[1]]
+
         setup_code = f"""
 from create_sparse_matrix_traditional import create_sparse_matrix_traditional
 from algorithm_1_hash import Sparse_matrix_hash, create_sparse_matrix_hash
 from algorithm_2_AVL import Sparse_matrix_AVL, create_sparse_matrix_AVL
 rows = cols = 10**{i}
-trad_A = create_sparse_matrix_traditional({i}, {sparcity})
-trad_B = create_sparse_matrix_traditional({i}, {sparcity})
-
-A_avl = Sparse_matrix_AVL(trad_A)
-B_avl = Sparse_matrix_AVL(trad_B)
-
-A_hash = Sparse_matrix_hash(traditional_matrix=trad_A)
-B_hash = Sparse_matrix_hash(traditional_matrix=trad_B)
+if {i} < 4:
         """
         
 
@@ -56,16 +68,16 @@ B_hash = Sparse_matrix_hash(traditional_matrix=trad_B)
         
         print(f'Executando {OP}, {i}, {sparcity}')
 
-        benchmark_hash = """
-A_hash.acess(0, 0)
+        benchmark_hash = f"""
+{A_hash.acess(0, 0)}
         """
 
-        benchmark_avl = """
-A_avl[0, 0]
+        benchmark_avl = f"""
+{A_avl[0, 0]}
         """
 
-        benchmark_trad = """
-trad_A[0][0]
+        benchmark_trad = f"""
+{trad_A[0][0]}
         """
 
         execution_time_hash = timeit.repeat(stmt=benchmark_hash, setup=setup_code, number=1, repeat=1)
@@ -74,31 +86,31 @@ trad_A[0][0]
         execution_time_avl = timeit.repeat(stmt=benchmark_avl, setup=setup_code, number=1, repeat=1)
         avl_times_a.append(execution_time_avl[0])
         
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
+        #execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
         
-        trad_times_a.append(execution_time_trad[0])
+        #trad_times_a.append(execution_time_trad[0])
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
+        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
 
         OP = 'Soma'
 
 
 
-        benchmark_hash = """
-C_hash = A_hash.plus_matrix(B_hash)
+        benchmark_hash = f"""
+C_hash = {A_hash.plus_matrix(B_hash)}
         """
 
-        benchmark_avl = """
-C_avl = A_avl + B_avl
+        benchmark_avl = f"""
+C_avl = {A_avl} + {B_avl}
         """
 
-        benchmark_trad = """
+        benchmark_trad = f"""
 trad_C = []
 for c in range(cols):
     trad_C.append(([0.0] * rows))
 for i in range(rows):
     for j in range(cols):
-        trad_C[i][j] = trad_A[i][j] + trad_B[i][j]
+        trad_C[i][j] = {trad_A}[i][j] + {trad_B}[i][j]
         """
         print(f'Executando {OP}, {i}, {sparcity}')
         execution_time_hash = timeit.repeat(stmt=benchmark_hash, setup=setup_code, number=1, repeat=1)
@@ -108,11 +120,11 @@ for i in range(rows):
         avl_times_s.append(execution_time_avl[0])
         print(f'Executando {OP}, {i}, {sparcity}')
         
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
-        trad_times_s.append(execution_time_trad[0])
+        #execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
+        #trad_times_s.append(execution_time_trad[0])
         print(f'Executando {OP}, {i}, {sparcity}')
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
+        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
 
         OP = 'Inserção'
         print(f'Executando {OP}, {i}, {sparcity}')
@@ -135,10 +147,10 @@ trad_A[0][0] = 1
         execution_time_avl = timeit.repeat(stmt=benchmark_avl, setup=setup_code, number=1, repeat=1)
         avl_times_i.append(execution_time_avl[0])
         
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
-        trad_times_i.append(execution_time_trad[0])
+        #execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
+        #trad_times_i.append(execution_time_trad[0])
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
+        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
 
         OP = 'Multiplicação'
 
@@ -170,10 +182,10 @@ for i in range(0, rows):
         avl_times_m.append(execution_time_avl[0])
         
         print(f'Executando {OP}, {i}, {sparcity}')
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
-        trad_times_m.append(execution_time_trad[0])
+        #execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
+        #trad_times_m.append(execution_time_trad[0])
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
+        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
 
         OP = "Escalar"
         print(f'Executando {OP}, {i}, {sparcity}')
@@ -199,10 +211,10 @@ for i in range(rows):
         execution_time_avl = timeit.repeat(stmt=benchmark_avl, setup=setup_code, number=1, repeat=1)
         avl_times_e.append(execution_time_avl[0])
         
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
-        trad_times_e.append(execution_time_trad[0])
+        #execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
+        #trad_times_e.append(execution_time_trad[0])
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
+        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
 
         OP = "Transposta"
         print(f'Executando {OP}, {i}, {sparcity}')
@@ -230,15 +242,15 @@ for i in range(rows):
         execution_time_avl = timeit.repeat(stmt=benchmark_avl, setup=setup_code, number=1, repeat=1)
         avl_times_t.append(execution_time_avl[0])
         
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
-        trad_times_t.append(execution_time_trad[0])
+        #execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=1, repeat=1)
+        #trad_times_t.append(execution_time_trad[0])
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
+        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
 
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times_a, marker='o', label='Hash')
     plt.plot(sparcities, avl_times_a, marker='s', label='AVL')
-    plt.plot(sparcities, trad_times_a, marker='.', label='Trad')
+    #plt.plot(sparcities, trad_times_a, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Acesso (i={i})")
@@ -250,7 +262,7 @@ for i in range(rows):
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times_s, marker='o', label='Hash')
     plt.plot(sparcities, avl_times_s, marker='s', label='AVL')
-    plt.plot(sparcities, trad_times_s, marker='.', label='Trad')
+    #plt.plot(sparcities, trad_times_s, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Soma (i={i})")
@@ -262,7 +274,7 @@ for i in range(rows):
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times_i, marker='o', label='Hash')
     plt.plot(sparcities, avl_times_i, marker='s', label='AVL')
-    plt.plot(sparcities, trad_times_i, marker='.', label='Trad')
+    #plt.plot(sparcities, trad_times_i, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Inserção (i={i})")
@@ -274,7 +286,7 @@ for i in range(rows):
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times_m, marker='o', label='Hash')
     plt.plot(sparcities, avl_times_m, marker='s', label='AVL')
-    plt.plot(sparcities, trad_times_m, marker='.', label='Trad')
+    #plt.plot(sparcities, trad_times_m, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Multiplicação (i={i})")
@@ -286,7 +298,7 @@ for i in range(rows):
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times_e, marker='o', label='Hash')
     plt.plot(sparcities, avl_times_e, marker='s', label='AVL')
-    plt.plot(sparcities, trad_times_e, marker='.', label='Trad')
+    #plt.plot(sparcities, trad_times_e, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Escalar (i={i})")
@@ -298,7 +310,7 @@ for i in range(rows):
     plt.figure(figsize=(8,5))
     plt.plot(sparcities, hash_times_t, marker='o', label='Hash')
     plt.plot(sparcities, avl_times_t, marker='s', label='AVL')
-    plt.plot(sparcities, trad_times_t, marker='.', label='Trad')
+    #plt.plot(sparcities, trad_times_t, marker='.', label='Trad')
     plt.xlabel('Sparsity')
     plt.ylabel('Execution Time (s)')
     plt.title(f"Execução de Transposta (i={i})")
@@ -310,5 +322,5 @@ for i in range(rows):
 
 with open(f'Tempos.csv', mode='w', newline='') as arquivo_csv:
     writer = csv.writer(arquivo_csv)
-    writer.writerow(['operation', 'i', 'sparsity', 'hash_time', 'avl_time', 'trad_time'])
+    writer.writerow(['operation', 'i', 'sparsity', 'hash_time', 'avl_time'])
     writer.writerows(dados)
