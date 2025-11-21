@@ -1,6 +1,6 @@
 class Sparse_matrix_hash:
 
-    def __init__(self, capacity=100, matrix_traditional= None):
+    def __init__(self, capacity=96, matrix_traditional= None):
         self.capacity = capacity
         self.size = 0
         self.is_transposed = 0
@@ -107,8 +107,7 @@ class Sparse_matrix_hash:
         return self.buckets
 
     def hash(self, i, j):
-        h = i * 73856093 ^ j * 19349663
-        return h % self.capacity
+        return (i*self.base_n_cols+j) % self.capacity
 
     def find_entry(self, ib, jb):
         bucket_index = self.hash(ib, jb)
@@ -141,11 +140,10 @@ class Sparse_matrix_hash:
 
         self.capacity = self.capacity * 2
         self.buckets = [[] for _ in range(self.capacity)]
-        self.size = 0  # será recontado no insert()
+        self.size = 0  
 
         for bucket in old_buckets:
             for ib, jb, val in bucket:
-                # re-inserir respeitando transposição atual
                 if self.is_transposed:
                     self.insert(jb, ib, val)
                 else:
@@ -153,7 +151,7 @@ class Sparse_matrix_hash:
 
 import random
 
-# Gera matriz Hash direto sem passar por tradicional
+#gera matriz_hash direto sem passar por tradicional
 def create_sparse_matrix_hash(i, sparsity):
     size = 10**i
     total_elements = size * size

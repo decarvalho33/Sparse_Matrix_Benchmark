@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import timeit
 import csv
+import statistics
+import math 
 
 from create_sparse_matrix_traditional import create_sparse_matrix_traditional
 from algorithm_1_hash import Sparse_matrix_hash, create_sparse_matrix_hash
@@ -8,7 +10,23 @@ from algorithm_2_AVL import Sparse_matrix_AVL, create_sparse_matrix_AVL
 
 dados = []
 
-for i in range(5, 7):
+def medir_tempo(stmt, globals_for_timeit, i):
+    
+    if i < 5:
+        tempos = timeit.repeat(stmt=stmt,
+                               globals=globals_for_timeit,
+                               number=1,
+                               repeat=10)
+        return statistics.median(tempos)
+    else:
+        tempos = timeit.repeat(stmt=stmt,
+                               globals=globals_for_timeit,
+                               number=1,
+                               repeat=1)
+        return tempos[0]
+
+
+for i in range(2, 7):
     if i >= 4:
         sparcities = [1/10**(i+2), 1/10**(i+1), 1/10**i]
     else:
@@ -39,7 +57,7 @@ for i in range(5, 7):
     trad_times_e = []
     
     for sparcity in sparcities:
-        # cria as matrizes somente UMA vez por (i, sparsity)
+        # cria as matrizes somente UMA vez por (i, sparsidade)
         if i < 4:
             trad_A = create_sparse_matrix_traditional(i, sparcity)
             trad_B = create_sparse_matrix_traditional(i, sparcity)
@@ -75,26 +93,19 @@ for i in range(5, 7):
         OP = "Acesso"
         print(f'Executando {OP}, i={i}, sparsity={sparcity}')
 
-        benchmark_hash = "A_hash.acess(0, 0)"
-        benchmark_avl  = "A_avl[0, 0]"
-        benchmark_trad = "trad_A[0][0]"
+        benchmark_hash = "A_hash.acess(50, 50)"
+        benchmark_avl  = "A_avl[50, 50]"
+        benchmark_trad = "trad_A[50][50]"
 
-        execution_time_hash = timeit.repeat(stmt=benchmark_hash,
-                                            globals=globals_for_timeit,
-                                            number=1, repeat=1)
-        hash_times_a.append(execution_time_hash[0])
-        
-        execution_time_avl = timeit.repeat(stmt=benchmark_avl,
-                                           globals=globals_for_timeit,
-                                           number=1, repeat=1)
-        avl_times_a.append(execution_time_avl[0])
-        
-        # execution_time_trad = timeit.repeat(stmt=benchmark_trad,
-        #                                     globals=globals_for_timeit,
-        #                                     number=1, repeat=1)
-        # trad_times_a.append(execution_time_trad[0])
+        hash_time = medir_tempo(benchmark_hash, globals_for_timeit, i)
+        avl_time = medir_tempo(benchmark_avl, globals_for_timeit, i)
+        # trad_time = medir_tempo(benchmark_trad, globals_for_timeit, i)  
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
+        hash_times_a.append(hash_time)
+        avl_times_a.append(avl_time)
+        # trad_times_a.append(trad_time)
+
+        dados.append([OP, i, sparcity, hash_time, avl_time])
 
         # ==================== SOMA ====================
 
@@ -112,22 +123,15 @@ for i_aux in range(rows):
         trad_C[i_aux][j_aux] = trad_A[i_aux][j_aux] + trad_B[i_aux][j_aux]
         """
 
-        execution_time_hash = timeit.repeat(stmt=benchmark_hash,
-                                            globals=globals_for_timeit,
-                                            number=1, repeat=1)
-        hash_times_s.append(execution_time_hash[0])
-        
-        execution_time_avl = timeit.repeat(stmt=benchmark_avl,
-                                           globals=globals_for_timeit,
-                                           number=1, repeat=1)
-        avl_times_s.append(execution_time_avl[0])
-        
-        # execution_time_trad = timeit.repeat(stmt=benchmark_trad,
-        #                                     globals=globals_for_timeit,
-        #                                     number=1, repeat=1)
-        # trad_times_s.append(execution_time_trad[0])
+        hash_time = medir_tempo(benchmark_hash, globals_for_timeit, i)
+        avl_time = medir_tempo(benchmark_avl, globals_for_timeit, i)
+        # trad_time = medir_tempo(benchmark_trad, globals_for_timeit, i)
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
+        hash_times_s.append(hash_time)
+        avl_times_s.append(avl_time)
+        # trad_times_s.append(trad_time)
+
+        dados.append([OP, i, sparcity, hash_time, avl_time])
 
         # ==================== INSERÇÃO ====================
 
@@ -135,34 +139,29 @@ for i_aux in range(rows):
         print(f'Executando {OP}, i={i}, sparsity={sparcity}')
 
         benchmark_hash = "A_hash.insert(0, 0, 1)"
-        benchmark_avl  = "A_avl.__setitem__((0, 0), 1)"  # ou "A_avl[0,0] = 1" não funciona como string
+        benchmark_avl  = "A_avl.__setitem__((0, 0), 1)"
         benchmark_trad = "trad_A[0][0] = 1"
 
-        execution_time_hash = timeit.repeat(stmt=benchmark_hash,
-                                            globals=globals_for_timeit,
-                                            number=1, repeat=1)
-        hash_times_i.append(execution_time_hash[0])
-        
-        execution_time_avl = timeit.repeat(stmt=benchmark_avl,
-                                           globals=globals_for_timeit,
-                                           number=1, repeat=1)
-        avl_times_i.append(execution_time_avl[0])
-        
-        # execution_time_trad = timeit.repeat(stmt=benchmark_trad,
-        #                                     globals=globals_for_timeit,
-        #                                     number=1, repeat=1)
-        # trad_times_i.append(execution_time_trad[0])
+        hash_time = medir_tempo(benchmark_hash, globals_for_timeit, i)
+        avl_time = medir_tempo(benchmark_avl, globals_for_timeit, i)
+        # trad_time = medir_tempo(benchmark_trad, globals_for_timeit, i)
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
+        hash_times_i.append(hash_time)
+        avl_times_i.append(avl_time)
+        # trad_times_i.append(trad_time)
+
+        dados.append([OP, i, sparcity, hash_time, avl_time])
 
         # ==================== MULTIPLICAÇÃO ====================
 
         OP = "Multiplicação"
         print(f'Executando {OP}, i={i}, sparsity={sparcity}')
 
-        benchmark_hash = "C_hash = A_hash.times_matrix(B_hash)"
-        benchmark_avl  = "C_avl = A_avl * B_avl"
-        benchmark_trad = """
+        if i < 5:
+            # roda normalmente para i < 5
+            benchmark_hash = "C_hash = A_hash.times_matrix(B_hash)"
+            benchmark_avl  = "C_avl = A_avl * B_avl"
+            benchmark_trad = """
 trad_C = []
 for c in range(cols):
     trad_C.append(([0.0] * rows))
@@ -171,24 +170,27 @@ for i_aux in range(rows):
         trad_C[i_aux][j_aux] = 0.0
         for k_aux in range(cols):
             trad_C[i_aux][j_aux] += trad_A[i_aux][k_aux] * trad_B[k_aux][j_aux]
-        """
+            """
 
-        execution_time_hash = timeit.repeat(stmt=benchmark_hash,
-                                            globals=globals_for_timeit,
-                                            number=1, repeat=1)
-        hash_times_m.append(execution_time_hash[0])
-        
-        execution_time_avl = timeit.repeat(stmt=benchmark_avl,
-                                           globals=globals_for_timeit,
-                                           number=1, repeat=1)
-        avl_times_m.append(execution_time_avl[0])
-        
-        # execution_time_trad = timeit.repeat(stmt=benchmark_trad,
-        #                                     globals=globals_for_timeit,
-        #                                     number=1, repeat=1)
-        # trad_times_m.append(execution_time_trad[0])
+            hash_time = medir_tempo(benchmark_hash, globals_for_timeit, i)
+            avl_time = medir_tempo(benchmark_avl, globals_for_timeit, i)
+            # trad_time = medir_tempo(benchmark_trad, globals_for_timeit, i)
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
+            hash_times_m.append(hash_time)
+            avl_times_m.append(avl_time)
+            # trad_times_m.append(trad_time)
+
+            dados.append([OP, i, sparcity, hash_time, avl_time])
+        else:
+            # pula multiplicação para i >= 5 para não travar
+            print(f'Pulando multiplicação para i={i} (dimensão 10^{i} muito grande).')
+            hash_time = math.nan
+            avl_time = math.nan
+            hash_times_m.append(hash_time)
+            avl_times_m.append(avl_time)
+            # trad_times_m.append(math.nan)
+            # No CSV, posso colocar string vazia para não ficar feio:
+            dados.append([OP, i, sparcity, "", ""])
 
         # ==================== ESCALAR ====================
 
@@ -204,22 +206,15 @@ for i_aux in range(rows):
         trad_A[i_aux][j_aux] *= scalar
         """
 
-        execution_time_hash = timeit.repeat(stmt=benchmark_hash,
-                                            globals=globals_for_timeit,
-                                            number=1, repeat=1)
-        hash_times_e.append(execution_time_hash[0])
-        
-        execution_time_avl = timeit.repeat(stmt=benchmark_avl,
-                                           globals=globals_for_timeit,
-                                           number=1, repeat=1)
-        avl_times_e.append(execution_time_avl[0])
-        
-        # execution_time_trad = timeit.repeat(stmt=benchmark_trad,
-        #                                     globals=globals_for_timeit,
-        #                                     number=1, repeat=1)
-        # trad_times_e.append(execution_time_trad[0])
+        hash_time = medir_tempo(benchmark_hash, globals_for_timeit, i)
+        avl_time = medir_tempo(benchmark_avl, globals_for_timeit, i)
+        # trad_time = medir_tempo(benchmark_trad, globals_for_timeit, i)
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
+        hash_times_e.append(hash_time)
+        avl_times_e.append(avl_time)
+        # trad_times_e.append(trad_time)
+
+        dados.append([OP, i, sparcity, hash_time, avl_time])
 
         # ==================== TRANSPOSTA ====================
 
@@ -237,22 +232,15 @@ for i_aux in range(rows):
         trad_C[j_aux][i_aux] = trad_A[i_aux][j_aux]
         """
 
-        execution_time_hash = timeit.repeat(stmt=benchmark_hash,
-                                            globals=globals_for_timeit,
-                                            number=1, repeat=1)
-        hash_times_t.append(execution_time_hash[0])
-        
-        execution_time_avl = timeit.repeat(stmt=benchmark_avl,
-                                           globals=globals_for_timeit,
-                                           number=1, repeat=1)
-        avl_times_t.append(execution_time_avl[0])
-        
-        # execution_time_trad = timeit.repeat(stmt=benchmark_trad,
-        #                                     globals=globals_for_timeit,
-        #                                     number=1, repeat=1)
-        # trad_times_t.append(execution_time_trad[0])
+        hash_time = medir_tempo(benchmark_hash, globals_for_timeit, i)
+        avl_time = medir_tempo(benchmark_avl, globals_for_timeit, i)
+        # trad_time = medir_tempo(benchmark_trad, globals_for_timeit, i)
 
-        dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0]])
+        hash_times_t.append(hash_time)
+        avl_times_t.append(avl_time)
+        # trad_times_t.append(trad_time)
+
+        dados.append([OP, i, sparcity, hash_time, avl_time])
 
     # ==================== GRÁFICOS POR i ====================
 
