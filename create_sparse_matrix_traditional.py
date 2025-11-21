@@ -1,25 +1,17 @@
 import numpy as np
 
 def create_sparse_matrix_traditional(i, sparsity):
-    rows = cols = 10 ** i
-    
-    # inicializa matriz totalmente zerada, mas "linha a linha"
-    matrix = [[0.0 for _ in range(cols)] for _ in range(rows)]
+    rows = cols = pow(10, i)
+
+    sparce_matrix = []
+    for r in range(rows):
+        sparce_matrix.append([0.0] * cols)
     
     total = rows * cols
     non_zero = int(total * sparsity)
-
-    # segurança: se sparsity for muito pequeno, não dá erro
-    if non_zero == 0:
-        return matrix
-
-    # escolhe índices únicos
     indices = np.random.choice(total, non_zero, replace=False)
-
-    # preenche os não zeros
-    for idx in indices:
-        r = idx // cols
-        c = idx % cols
-        matrix[r][c] = float(np.random.rand())
-    
-    return matrix
+    for index in indices:
+        row = index // cols
+        col = index % cols
+        sparce_matrix[row][col] = np.random.rand()
+    return sparce_matrix
