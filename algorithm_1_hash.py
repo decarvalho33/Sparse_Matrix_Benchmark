@@ -55,6 +55,8 @@ class Sparse_matrix_hash:
             #chave já existe -> atualiza valor
             bucket[pos][2] = x
 
+        self.maybe_resize()
+
         return 
     
     def transpose(self):
@@ -100,6 +102,12 @@ class Sparse_matrix_hash:
         return T
 # ---------------------- aux functions
 
+    def getSize(self):
+        return self.size
+    
+    def getBuckets(self):
+        return self.buckets
+
     def hash(self, i, j):
         return (i*self.base_n_cols+j) % self.capacity
 
@@ -122,3 +130,24 @@ class Sparse_matrix_hash:
                     yield jb, ib, val
                 else:
                     yield ib, jb, val
+
+    def maybe_resize(self):
+        load_factor = self.size / self.capacity
+        if load_factor > 0.75:
+            self.resize()
+
+    def resize(self):
+        old_buckets = self.buckets
+        old_capacity = self.capacity
+
+        self.capacity = self.capacity * 2
+        self.buckets = [[] for _ in range(self.capacity)]
+        self.size = 0  # será recontado no insert()
+
+        for bucket in old_buckets:
+            for ib, jb, val in bucket:
+                # re-inserir respeitando transposição atual
+                if self.is_transposed:
+                    self.insert(jb, ib, val)
+                else:
+                    self.insert(ib, jb, val)
