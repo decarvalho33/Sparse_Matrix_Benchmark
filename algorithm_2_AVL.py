@@ -119,6 +119,7 @@ class Sparse_matrix_AVL:
 
         for (i, j), value in AVL.in_order_elements(other.root):
             current = C_tree[i, j]
+            print("debug:", type(current), current, value)
             C_tree[i, j] = current + value
 
         return C_tree
@@ -128,7 +129,8 @@ class Sparse_matrix_AVL:
         self.root = None
         for i in range(len(A)):
             for j in range(len(A[0])):
-                if A[i][j] != 0:
+                valor = A[i][j]
+                if valor != 0 and not isinstance(valor, list):
                     self.root = self.__insert(self.root, (i, j), A[i][j])
 
 
