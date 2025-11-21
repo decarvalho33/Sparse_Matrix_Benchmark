@@ -157,3 +157,20 @@ C = A + B
 #5 * A
 print_avl_tree(C.root)
 '''
+
+import random
+
+def create_sparse_matrix_AVL(i, sparsity):
+    size = 10**i
+    total_elements = size * size
+    nonzeros = int(total_elements * sparsity)
+    avl_matrix = Sparse_matrix_AVL()
+    positions = set()
+    while len(positions) < nonzeros:
+        row = random.randint(0, size - 1)
+        col = random.randint(0, size - 1)
+        positions.add((row, col))
+    for (row, col) in positions:
+        value = random.randint(1, 100)
+        avl_matrix[row, col] = value
+    return avl_matrix

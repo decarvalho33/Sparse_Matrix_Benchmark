@@ -77,8 +77,7 @@ class Sparse_matrix_hash:
         return P
     
     def times_scalar(self, a):
-        S = Sparse_matrix_hash(self.n_rows, self.n_cols,
-                               capacity=self.capacity)
+        S = Sparse_matrix_hash(capacity=self.capacity)
 
         for i, j, val in self.items():
             S.insert(i, j, a * val)
@@ -87,8 +86,7 @@ class Sparse_matrix_hash:
     
     def times_matrix(self, B):
 
-        T = Sparse_matrix_hash(self.n_rows, B.n_cols,
-                               capacity=max(self.capacity, B.capacity))
+        T = Sparse_matrix_hash(capacity=max(self.capacity, B.capacity))
 
         A_items = list(self.items())
         B_items = list(B.items())
@@ -151,3 +149,24 @@ class Sparse_matrix_hash:
                     self.insert(jb, ib, val)
                 else:
                     self.insert(ib, jb, val)
+
+import random
+
+# Gera matriz Hash direto sem passar por tradicional
+def create_sparse_matrix_hash(i, sparsity):
+    size = 10**i
+    total_elements = size * size
+    nonzeros = int(total_elements * sparsity)
+    hash_matrix = Sparse_matrix_hash(capacity=24)
+    hash_matrix.n_rows = size
+    hash_matrix.n_cols = size
+    hash_matrix.base_n_cols = size
+    positions = set()
+    while len(positions) < nonzeros:
+        row = random.randint(0, size - 1)
+        col = random.randint(0, size - 1)
+        positions.add((row, col))
+    for (row, col) in positions:
+        value = random.randint(1, 100)
+        hash_matrix.insert(row, col, value)
+    return hash_matrix
