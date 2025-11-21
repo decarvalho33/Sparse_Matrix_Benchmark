@@ -4,8 +4,8 @@ def create_sparse_matrix_traditional(i, sparsity):
     rows = cols = pow(10, i)
 
     sparce_matrix = []
-    for c in range(cols):
-        sparce_matrix.append(([0.0] * rows))
+    for r in range(rows):
+        sparce_matrix.append([0.0] * cols)
     
     total = rows * cols
     non_zero = int(total * sparsity)
