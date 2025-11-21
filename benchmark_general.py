@@ -115,7 +115,7 @@ for i in range(rows):
         avl_times_s.append(execution_time_avl[0])
         print(f'Executando {OP}, {i}, {sparcity}')
         
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=10000, repeat=1) if i < 4 else [0]
+        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=10000, repeat=1) if i < 0 else [0]
         trad_times_s.append(execution_time_trad[0])
         print(f'Executando {OP}, {i}, {sparcity}')
 
@@ -177,7 +177,7 @@ for i in range(0, rows):
         avl_times_m.append(execution_time_avl[0])
         
         print(f'Executando {OP}, {i}, {sparcity}')
-        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=10000, repeat=1) if i < 4 else [0]
+        execution_time_trad = timeit.repeat(stmt=benchmark_trad, setup=setup_code, number=10000, repeat=1) if i < 0 else [0]
         trad_times_m.append(execution_time_trad[0])
 
         dados.append([OP, i, sparcity, execution_time_hash[0], execution_time_avl[0], execution_time_trad[0]])
